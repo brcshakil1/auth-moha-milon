@@ -1,21 +1,45 @@
+import { useContext } from "react";
+import { AuthContext } from "../../Providers/AuthProvider";
+import toast from "react-hot-toast";
+import { updateProfile } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
+
 const Register = () => {
+  const { createUser } = useContext(AuthContext);
+  const navigate = useNavigate();
+
   const handleRegister = (e) => {
     e.preventDefault();
     const name = e.target.name.value;
     const imageURL = e.target.imageURL.value;
     const email = e.target.email.value;
     const password = e.target.password.value;
+    const userProfile = {
+      displayName: name,
+      photoURL: imageURL,
+    };
 
-    console.log(
-      "name: ",
-      name,
-      "image-url: ",
-      imageURL,
-      "email: ",
-      email,
-      "password: ",
-      password
-    );
+    if (!/[A-Z]/.test(password)) {
+      toast.error("Password must have a uppercase letter");
+      return;
+    }
+
+    createUser(email, password)
+      .then((result) => {
+        if (result.user) {
+          updateProfile(result.user, userProfile)
+            .then(() => {
+              console.log("profile updated");
+            })
+            .catch((err) => console.log(err));
+          toast.success("User registered successfully!");
+        }
+        e.target.reset();
+        navigate("/login");
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      });
   };
   return (
     <div className="hero min-h-screen ">

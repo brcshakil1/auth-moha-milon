@@ -1,22 +1,39 @@
+import { useContext } from "react";
+import { AuthContext } from "../../Providers/AuthProvider";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+
 const Login = () => {
+  const { signInUser, googleSignIn } = useContext(AuthContext);
+  const navigate = useNavigate();
+
   const handleLogin = (e) => {
     e.preventDefault();
-    const name = e.target.name.value;
-    const imageURL = e.target.imageURL.value;
     const email = e.target.email.value;
     const password = e.target.password.value;
 
-    console.log(
-      "name: ",
-      name,
-      "image-url: ",
-      imageURL,
-      "email: ",
-      email,
-      "password: ",
-      password
-    );
+    signInUser(email, password)
+      .then((result) => {
+        if (result.user) {
+          toast.success("Logged in successfully!");
+        }
+        e.target.reset();
+        navigate("/");
+      })
+      .catch((error) => toast.error(error.message));
   };
+
+  const handleGoogleSignIn = () => {
+    googleSignIn()
+      .then((result) => {
+        if (result.user) {
+          toast.success("Logged in successfully!");
+        }
+        navigate("/");
+      })
+      .catch((err) => toast.error(err.message));
+  };
+
   return (
     <div className="hero min-h-screen">
       <div className="hero-content flex-col lg:flex-row-reverse">
@@ -61,6 +78,9 @@ const Login = () => {
               <button className="btn btn-primary">Login</button>
             </div>
           </form>
+          <button onClick={handleGoogleSignIn} className="btn btn-ghost">
+            Google
+          </button>
         </div>
       </div>
     </div>
