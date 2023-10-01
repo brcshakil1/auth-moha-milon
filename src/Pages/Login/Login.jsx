@@ -1,4 +1,22 @@
 const Login = () => {
+  const handleLogin = (e) => {
+    e.preventDefault();
+    const name = e.target.name.value;
+    const imageURL = e.target.imageURL.value;
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+
+    console.log(
+      "name: ",
+      name,
+      "image-url: ",
+      imageURL,
+      "email: ",
+      email,
+      "password: ",
+      password
+    );
+  };
   return (
     <div className="hero min-h-screen">
       <div className="hero-content flex-col lg:flex-row-reverse">
@@ -11,14 +29,15 @@ const Login = () => {
           </p>
         </div>
         <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
-          <div className="card-body">
+          <form onSubmit={handleLogin} className="card-body">
             <div className="form-control">
               <label className="label">
                 <span className="label-text">Email</span>
               </label>
               <input
-                type="text"
-                placeholder="email"
+                type="email"
+                placeholder="Email"
+                name="email"
                 className="input input-bordered"
               />
             </div>
@@ -27,8 +46,9 @@ const Login = () => {
                 <span className="label-text">Password</span>
               </label>
               <input
-                type="text"
+                type="password"
                 placeholder="password"
+                name="password"
                 className="input input-bordered"
               />
               <label className="label">
@@ -40,7 +60,7 @@ const Login = () => {
             <div className="form-control mt-6">
               <button className="btn btn-primary">Login</button>
             </div>
-          </div>
+          </form>
         </div>
       </div>
     </div>
